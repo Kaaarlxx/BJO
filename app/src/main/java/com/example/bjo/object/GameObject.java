@@ -10,6 +10,8 @@ public abstract class GameObject {
     protected double velocityY;
     protected double width;
     protected double height;
+    protected double directionX;
+    protected double directionY;
 
     public GameObject(double x, double y){
         this.positionX = (float) x;
@@ -24,7 +26,7 @@ public abstract class GameObject {
         );
     }
 
-    public static boolean EnemyisColliding(GameObject obj1, GameObject obj2) {
+    public static boolean isColliding(GameObject obj1, GameObject obj2) {
         double distance  =getDistanceBetweenObjects(obj1,obj2);
         double pitagoras = Math.sqrt(
                 Math.pow(obj2.height-obj1.height,2)+Math.pow(obj2.width-obj1.width,2));
@@ -38,4 +40,11 @@ public abstract class GameObject {
     protected double getPositionX(){return positionX;};
 
     protected double getPositionY(){return positionY;};
+
+    protected double getDirectionX() {
+        return directionX;
+    }
+    protected double getDirectionY() {
+        return directionY;
+    }
 }

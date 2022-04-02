@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import com.example.bjo.GameLoop;
 import com.example.bjo.Joystick;
 import com.example.bjo.R;
+import com.example.bjo.Utils;
 
 public class Player extends GameObject {
     public static final double SPEED_PIXELS_PER_SECOND = 400.0;
@@ -38,6 +39,12 @@ public class Player extends GameObject {
         velocityY = joystick.getActuatorY()*MAX_SPEED;
         positionX += velocityX;
         positionY += velocityY;
+
+        if(velocityX !=0 || velocityY != 0){
+            double distance = Utils.getDistanceBetweenPoints(0,0,velocityX,velocityY);
+            directionX = velocityX/distance;
+            directionY = velocityY/distance;
+        }
     }
 
     public void setPosition(float x, float y) {

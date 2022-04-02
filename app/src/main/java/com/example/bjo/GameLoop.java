@@ -1,7 +1,10 @@
 package com.example.bjo;
 
 import android.graphics.Canvas;
+import android.os.Build;
 import android.view.SurfaceHolder;
+
+import androidx.annotation.RequiresApi;
 
 public class GameLoop extends Thread {
     public static final double MAX_UPS = 60;
@@ -30,6 +33,7 @@ public class GameLoop extends Thread {
         isRunning = true;
         start();
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void run(){
         super.run();
