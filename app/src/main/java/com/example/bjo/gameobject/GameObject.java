@@ -1,4 +1,4 @@
-package com.example.bjo.object;
+package com.example.bjo.gameobject;
 
 import android.graphics.Canvas;
 
@@ -8,7 +8,7 @@ public abstract class GameObject {
     protected float positionY;
     protected double velocityX;
     protected double velocityY;
-    protected double width;
+    public double width;
     protected double height;
     protected double directionX;
     protected double directionY;
@@ -19,7 +19,7 @@ public abstract class GameObject {
 
     }
 
-    protected static double getDistanceBetweenObjects(GameObject obj1, GameObject obj2) {
+    public static double getDistanceBetweenObjects(GameObject obj1, GameObject obj2) {
         return Math.sqrt(
                 Math.pow(obj2.getPositionX() - obj1.getPositionX(), 2) +
                         Math.pow(obj2.getPositionY() - obj1.getPositionY(), 2)
@@ -37,14 +37,14 @@ public abstract class GameObject {
     public abstract void draw(Canvas canvas);
     public abstract void update();
 
-    protected double getPositionX(){return positionX;};
+    public double getPositionX(){return positionX;};
 
-    protected double getPositionY(){return positionY;};
+    public double getPositionY(){return positionY;};
 
-    protected double getDirectionX() {
+    public double getDirectionX() {
         return directionX;
     }
-    protected double getDirectionY() {
+    public double getDirectionY() {
         return directionY;
     }
 }

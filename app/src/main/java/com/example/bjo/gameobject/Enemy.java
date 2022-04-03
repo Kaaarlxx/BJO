@@ -1,4 +1,4 @@
-package com.example.bjo.object;
+package com.example.bjo.gameobject;
 
 import android.content.Context;
 import android.graphics.Bitmap;

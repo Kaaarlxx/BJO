@@ -1,4 +1,4 @@
-package com.example.bjo;
+package com.example.bjo.gamepanel;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

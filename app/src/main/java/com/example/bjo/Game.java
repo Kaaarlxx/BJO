@@ -2,7 +2,6 @@ package com.example.bjo;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -11,10 +10,13 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.example.bjo.object.Bullet;
-import com.example.bjo.object.Enemy;
-import com.example.bjo.object.GameObject;
-import com.example.bjo.object.Player;
+import com.example.bjo.gameobject.Bullet;
+import com.example.bjo.gameobject.Enemy;
+import com.example.bjo.gameobject.GameObject;
+import com.example.bjo.gameobject.Player;
+import com.example.bjo.gamepanel.GameOver;
+import com.example.bjo.gamepanel.Joystick;
+import com.example.bjo.gamepanel.Performance;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,14 +30,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private List<Bullet> bulletList = new ArrayList<Bullet>();
     private int joystickPointerId = 0;
     private int numberOfSpellsToCast = 0;
+    private GameOver gameOver;
+    private Performance performance;
 
     public Game(Context context) {
         super(context);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
+
         gameLoop = new GameLoop(this,surfaceHolder);
+
+        //gamePanels
+        performance = new Performance(gameLoop,context);
+        gameOver = new GameOver(context);
         joystick = new Joystick(2300,1000,100,40);
+
+        //gameObjects
         player = new Player(getContext(),joystick,100,100,200,200);
+
 
         setFocusable(true);
     }
@@ -88,6 +100,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
         return true;
     }
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void draw(Canvas canvas){
@@ -96,25 +110,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.draw(canvas);
         for(Enemy enemy : enemyList) enemy.draw(canvas);
         for(Bullet bullet : bulletList) bullet.draw(canvas);
+    
+        if(player.getHealthPoints()<=0){
+            gameOver.draw(canvas);
+        }
     }
-
-    public void drawUPS(Canvas canvas){
-        String averageUPS = Double.toString(gameLoop.getAverageUPS());
-        Paint paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.white));
-        paint.setTextSize(50);
-        canvas.drawText("UPS " + averageUPS , 100,100,paint);
-    }
-    public void drawFPS(Canvas canvas){
-        String averageFPS = Double.toString(gameLoop.getAverageFPS());
-        Paint paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.white));
-        paint.setTextSize(50);
-        canvas.drawText("FPS " + averageFPS , 100,200,paint);
-    }
-
+    
     public void update() {
 
+        if(player.getHealthPoints()<=0){
+            return;
+        }
         player.update();
         joystick.update();
         if(Enemy.readyToSpawn()){
@@ -123,14 +129,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         while(numberOfSpellsToCast > 0){
             bulletList.add(new Bullet(getContext(),player,40,60));
             numberOfSpellsToCast--;
-
         }
+
         for(Enemy enemy :enemyList) enemy.update();
         for(Bullet bullet :bulletList) bullet.update();
-
         Iterator<Enemy>iteratorEnemy = enemyList.iterator();
+
+
         while (iteratorEnemy.hasNext()){
             GameObject enemy = iteratorEnemy.next();
+            if(GameObject.isColliding(enemy,player)){
+                        player.setHealthPoints(player.getHealthPoints()-1);
+                        iteratorEnemy.remove();
+                    }
                 Iterator<Bullet> iteratorBullet = bulletList.iterator();
                 while(iteratorBullet.hasNext()){
                     GameObject bullet = iteratorBullet.next();
