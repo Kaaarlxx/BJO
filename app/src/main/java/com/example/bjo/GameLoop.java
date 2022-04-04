@@ -40,12 +40,9 @@ public class GameLoop extends Thread {
 
         int updateCount = 0;
         int frameCount = 0;
-
         long startTime;
         long elapsedTime;
         long sleepTime;
-
-
 
         Canvas canvas = null;
         startTime = System.currentTimeMillis();
@@ -101,6 +98,15 @@ public class GameLoop extends Thread {
                 frameCount = 0;
                 startTime = System.currentTimeMillis();
             }
+        }
+    }
+
+    public void stopLoop() {
+        isRunning = false;
+        try{
+            join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
         }
     }
 }
